@@ -1,0 +1,21 @@
+collectd:
+  build: apps/collectd
+  command: /bin/bash -c "service collectd stop; sleep 45; collectd -f"
+  links:
+    - kairosdb
+
+kairosdb:
+  build: apps/kairosdb
+  command: /bin/bash -c "sleep 30; /opt/kairosdb/bin/kairosdb.sh run"
+  ports:
+   - "4242:4242"
+   - "8080:8080"
+  links:
+   - cassandra
+
+cassandra:
+  image: jimthedev/cassandra
+  hostname: cassandra
+  ports:
+    - "9042:9042"
+    - "9160:9160"
